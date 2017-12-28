@@ -1,2 +1,4 @@
-# middleware-building
-常用中间件搭建流程和范例
+# 中间件搭建范例
+
+## 中间件列表
+* [openfire](http://github.com/dubbo)

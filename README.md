@@ -1,7 +1,5 @@
-# 中间件搭建
+middleware building
 =================
-
-## 中间件列表
 1. [zookeeper](zookeeper/zookeeper.md)分布式协调协调中间件
 2. [rocketmq](rocketmq/rocketmq.md)消息中间件
 3. [openfire](openfire/openfire.md)实时协作RTC服务器

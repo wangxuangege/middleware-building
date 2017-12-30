@@ -76,7 +76,8 @@ zkCli.cmd -server 127.0.0.1:2183
 ~~~
 &nbsp;&nbsp;&nbsp;&nbsp;在第一个节点的客户端中添加一个node：
 ~~~sh
-create /test 123
+create 
+/test 123
 ~~~
 &nbsp;&nbsp;&nbsp;&nbsp;在第二个节点的客户端中添加一个node：
 

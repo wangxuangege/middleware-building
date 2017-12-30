@@ -36,6 +36,7 @@ public class StandaloneTest {
                         stat = zk.exists("/test", true);
                         Thread.sleep(1000);
                     } while (stat != null);
+
                     zk.close();
                     System.out.println("zk close");
                 } catch (Throwable e) {

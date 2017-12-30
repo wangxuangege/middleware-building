@@ -98,4 +98,4 @@ create /test 123
 ls /
 ~~~
 
-# 2. zookeeper常用命令
+# 2. zookeeper与java的连接

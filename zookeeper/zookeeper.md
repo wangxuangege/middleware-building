@@ -5,6 +5,7 @@ zookeeper
 # 1. zookeeper安装
 
 ## 1.1 独立模式（standalone）
+
 - 1.解压下载的压缩包zookeeper.tar.gz，进入conf目录，复制一份zoo_sample.cfg配置文件，命名为zoo.cfg，修改配置文件：
 ~~~txt
 tickTime=2000
@@ -13,17 +14,22 @@ syncLimit=5
 dataDir=D:\workspace\middleware-building\.build\zookeeper\zk1\data
 clientPort=2181
 ~~~ 
+
 - 2.进入bin目录，启动zookeeper：
 ~~~sh
 zkServer.cmd
 ~~~
+
 - 3.客户端连接zookeeper：
 ~~~sh
 zkCli.cmd -server 127.0.0.1:2181
 ~~~
+
 ## 1.2 复制模式（replicated）
 &nbsp;&nbsp;&nbsp;&nbsp;使用单机搭建伪集群模式的zookeeper集群。zookeeper通过复制来实现高可用性,只要集合体中半数以上的机器处于可用状态,它就能够保证服务继续。
+
 - 1. 搭建3个zookeeper节点，解压下载的压缩包zookeeper.tar.gz，复制三份，分别放在同一个目录下，复制zoo_sample.cfg配置文件，重命名为zoo.cfg，修改配置文件分别如下：
+
 &nbsp;&nbsp;&nbsp;&nbsp;第一个节点：
 ~~~txt
 tickTime=2000
@@ -35,6 +41,7 @@ zk1=localhost:2887:3887
 zk2=localhost:2888:3888
 zk3=localhost:2889:3889
 ~~~ 
+
 &nbsp;&nbsp;&nbsp;&nbsp;第二个节点：
 ~~~txt
 tickTime=2000
@@ -46,6 +53,7 @@ zk1=localhost:2887:3887
 zk2=localhost:2888:3888
 zk3=localhost:2889:3889
 ~~~ 
+
 &nbsp;&nbsp;&nbsp;&nbsp;第三个节点：
 ~~~txt
 tickTime=2000
@@ -57,27 +65,34 @@ zk1=localhost:2887:3887
 zk2=localhost:2888:3888
 zk3=localhost:2889:3889
 ~~~ 
+
 - 2.分别进入bin目录，启动三个zookeeper：
 ~~~sh
 zkServer.cmd
 ~~~
+
 - 3.测试集群同步，分别用三个客户端连接三个节点：
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第一个节点：
 ~~~sh
 zkCli.cmd -server 127.0.0.1:2181
 ~~~
+
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第二个节点：
 ~~~sh
 zkCli.cmd -server 127.0.0.1:2182
 ~~~
+
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第三个节点：
 ~~~sh
 zkCli.cmd -server 127.0.0.1:2183
 ~~~
+
 &nbsp;&nbsp;&nbsp;&nbsp;在第一个节点的客户端中添加一个node：
 ~~~sh
-create 
-/test 123
+create /test 123
 ~~~
-&nbsp;&nbsp;&nbsp;&nbsp;在第二个节点的客户端中添加一个node：
 
+&nbsp;&nbsp;&nbsp;&nbsp;在第二个节点的客户端可以查看到第一个节点添加的node：
+~~~sh
+ls /
+~~~

@@ -28,7 +28,7 @@ zkCli.cmd -server 127.0.0.1:2181
 ## 1.2 复制模式（replicated）
 &nbsp;&nbsp;&nbsp;&nbsp;使用单机搭建伪集群模式的zookeeper集群。zookeeper通过复制来实现高可用性,只要集合体中半数以上的机器处于可用状态,它就能够保证服务继续。
 
-- 1. 搭建3个zookeeper节点，解压下载的压缩包zookeeper.tar.gz，复制三份，分别放在同一个目录下，复制zoo_sample.cfg配置文件，重命名为zoo.cfg，修改配置文件分别如下：
+- 1.搭建3个zookeeper节点，解压下载的压缩包zookeeper.tar.gz，复制三份，分别放在同一个目录下，复制zoo_sample.cfg配置文件，重命名为zoo.cfg，修改配置文件分别如下：
 
 &nbsp;&nbsp;&nbsp;&nbsp;第一个节点：
 ~~~txt
@@ -72,6 +72,7 @@ zkServer.cmd
 ~~~
 
 - 3.测试集群同步，分别用三个客户端连接三个节点：
+
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第一个节点：
 ~~~sh
 zkCli.cmd -server 127.0.0.1:2181
@@ -96,3 +97,5 @@ create /test 123
 ~~~sh
 ls /
 ~~~
+
+# 2. zookeeper常用命令

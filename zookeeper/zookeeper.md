@@ -36,10 +36,11 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2181
-dataDir=D:\workspace\middleware-building\.build\zookeeper\zk2\data\zk1
-zk1=localhost:2887:3887
-zk2=localhost:2888:3888
-zk3=localhost:2889:3889
+dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk1
+dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk1
+server.1=localhost:2887:3887
+server.2=localhost:2888:3888
+server.3=localhost:2889:3889
 ~~~ 
 
 &nbsp;&nbsp;&nbsp;&nbsp;第二个节点：
@@ -48,10 +49,11 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2182
-dataDir=D:\workspace\middleware-building\.build\zookeeper\zk2\data\zk2
-zk1=localhost:2887:3887
-zk2=localhost:2888:3888
-zk3=localhost:2889:3889
+dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk2
+dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk2
+server.1=localhost:2887:3887
+server.2=localhost:2888:3888
+server.3=localhost:2889:3889
 ~~~ 
 
 &nbsp;&nbsp;&nbsp;&nbsp;第三个节点：
@@ -60,10 +62,11 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2183
-dataDir=D:\workspace\middleware-building\.build\zookeeper\zk2\data\zk3
-zk1=localhost:2887:3887
-zk2=localhost:2888:3888
-zk3=localhost:2889:3889
+dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk3
+dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk3
+server.1=localhost:2887:3887
+server.2=localhost:2888:3888
+server.3=localhost:2889:3889
 ~~~ 
 
 - 2.分别进入bin目录，启动三个zookeeper：

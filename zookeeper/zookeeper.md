@@ -188,6 +188,60 @@ public class StandaloneTest {
 # 3.1 文件系统
 
 &nbsp;&nbsp;&nbsp;&nbsp;zookeeper维护一个类似文件系统的数据结构：
-
 ![zookeeper数据结构](static/zookeeper数据结构.png)
+
+&nbsp;&nbsp;&nbsp;&nbsp;每个子目录项如NameService都被称作为znode，和文件系统一样，我们能够自由的增加、删除znode，在一个znode下增加、删除子znode，唯一的不同在于znode是可以存储数据的。
+
+&nbsp;&nbsp;&nbsp;&nbsp;有四种类型的znode：
+
+- &nbsp;&nbsp;&nbsp;&nbsp;持久化目录节点：客户端与zookeeper断开连接后，该节点依旧存在。
+- &nbsp;&nbsp;&nbsp;&nbsp;持久化顺序编号目录节点：客户端与zookeeper断开连接后，该节点依旧存在，只有zookeeper给该节点名称进行顺序编号。
+- &nbsp;&nbsp;&nbsp;&nbsp;临时目录节点：客户端与zookeeper断开连接后，该节点会被删除。
+- &nbsp;&nbsp;&nbsp;&nbsp;临时顺序编号目录节点：客户端与zookeeper断开连接后，该节点会被删除，只是zookeeper给该节点名称进行顺序编号。
+
+# 3.2 通知机制
+
+&nbsp;&nbsp;&nbsp;&nbsp;客户端注册监听它关心的目录节点，当目录节点发生变化后（数据更改、被删除、子目录节点增加删除）时，zookeeper会通知客户端。
+
+# 4. zookeeper服务
+
+# 4.1 命名服务
+
+&nbsp;&nbsp;&nbsp;&nbsp;命名服务就是提供名称的服务，zookeeper的命名服务有两个应用方面。一个是提供类似JNDI功能，另一个是制作分布式的序列号生成器。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;JNDI功能，我们利用Zookeeper的分层结构，可以把系统中的各种服务的名称、地址、以及目录信息存放在Zookeeper中，需要的时候去Zookeeper中读取。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;利用Zookeeper循序节点的特性，制作分布式的序列号生成器，或者叫id生成器。（分布式环境下使用作为数据库id，另外一种是UUID（缺点：没有规律）），Zookeeper可以生成有顺序的容易理解的同时支持分布式环境的编号。 
+
+# 4.2 配置管理
+
+&nbsp;&nbsp;&nbsp;&nbsp;zookeeper可以集中配置应用程序的配置项，将其配置在各个目录节点上面，然后应用程序对这个目录节点进行监听，当配置发生变更时候，应用会接受到zookeeper的通知，然后从zookeeper获取新的配置，并且可以触发一些行为。
+
+# 4.3 集群管理
+
+&nbsp;&nbsp;&nbsp;&nbsp;集群管理主要在于两个方面：是否有机器退出和加入、选举master。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第一点，所有机器约定在父目录GroupMembers下创建临时目录节点，然后监听父目录节点的子节点变化消息。一旦有机器挂掉，该机器与zookeeper的连接断开，其所创建的临时目录节点被删除，所有其他机器都收到通知：某个兄弟目录被删除，于是，所有人都知道。新机器加入也是类似，所有机器收到通知：新兄弟目录加入，highcount又有了。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第二点，我们稍微改变一下，所有机器创建临时顺序编号目录节点，每次选取编号最小的机器作为master就好。
+
+# 4.4 分布式锁
+
+&nbsp;&nbsp;&nbsp;&nbsp;有了zookeeper的一致性文件系统，锁的问题变得容易。锁服务可以分为两类，一个是保持独占，另一个是控制时序。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第一类，我们将zookeeper上的一个znode看作是一把锁，通过createznode的方式来实现。所有客户端都去创建 /distribute_lock节点，最终成功创建的那个客户端也即拥有了这把锁。用完删除掉自己创建的distribute_lock节点就释放出锁。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第二类，/distribute_lock已经预先存在，所有客户端在它下面创建临时顺序编号目录节点，和选master一样，编号最小的获得锁，用完删除，依次方便。
+
+# 4.5 队列管理
+
+&nbsp;&nbsp;&nbsp;&nbsp;有两种类型的队列：一个是同步队列，当一个队列的成员都聚齐时，这个队列才可用，否则等待所有成员到达；另一个是按照FIFO方式进入队列和出队操作。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第一类，在约定目录下创建临时目录节点，监听节点数目是否是我们要求的数目。
+
+- &nbsp;&nbsp;&nbsp;&nbsp;对于第二类，和分布式锁服务中的控制时序场景基本原理一致，入列有编号，出列按编号。
+
+
+
+
  

@@ -188,4 +188,6 @@ public class StandaloneTest {
 # 3.1 文件系统
 
 &nbsp;&nbsp;&nbsp;&nbsp;zookeeper维护一个类似文件系统的数据结构：
+
+![zookeeper数据结构](static/zookeeper数据结构.png)
  

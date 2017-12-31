@@ -99,3 +99,93 @@ ls /
 ~~~
 
 # 2. zookeeper与java的连接
+
+## 2.1 maven依赖
+
+&nbsp;&nbsp;&nbsp;&nbsp;pom依赖如下,version根据你的实际情况选择：
+~~~xml
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
+    <version>${version}</version>
+</dependency>
+~~~
+
+## 2.2 java使用用例
+
+&nbsp;&nbsp;&nbsp;&nbsp;使用zookeeper的java方式，使用代码描述，不详细说明。
+~~~java
+package com.wx.zookeeper;
+
+import org.apache.zookeeper.*;
+import org.apache.zookeeper.data.Stat;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * zookeeper简单测试
+ *
+ * @author xinquan.huangxq
+ */
+public class StandaloneTest {
+
+    private static final ZooKeeper zk;
+
+    private static final boolean isStandalone = false;
+
+    static {
+        try {
+            if (isStandalone) {
+                zk = new ZooKeeper("localhost:2181", 30000, new TestWatcher());
+            } else {
+                zk = new ZooKeeper("localhost:2181,localhost:2182,localhost:2183", 30000, new TestWatcher());
+            }
+            System.out.println("zk connect");
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) throws KeeperException, InterruptedException {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            public void run() {
+                try {
+                    Stat stat;
+                    do {
+                        stat = zk.exists("/test", true);
+                        Thread.sleep(1000);
+                    } while (stat != null);
+
+                    zk.close();
+                    System.out.println("zk close");
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        executorService.shutdown();
+    }
+
+    private static class TestWatcher implements Watcher {
+
+        public void process(WatchedEvent watchedEvent) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("path").append(":").append(watchedEvent.getPath()).append(" ")
+                    .append("type").append(":").append(watchedEvent.getType()).append(" ")
+                    .append("stat").append(":").append(watchedEvent.getState()).append(" ");
+            System.out.println(sb.toString());
+        }
+    }
+}
+~~~
+
+# 3. zookeeper深入理解
+
+&nbsp;&nbsp;&nbsp;&nbsp;zookeeper最重要的就是类似于文件系统的数据结构和通知机制。
+
+# 3.1 文件系统
+
+&nbsp;&nbsp;&nbsp;&nbsp;zookeeper维护一个类似文件系统的数据结构：
+ 

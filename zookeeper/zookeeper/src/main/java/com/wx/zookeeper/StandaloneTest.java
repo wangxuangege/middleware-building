@@ -3,10 +3,8 @@ package com.wx.zookeeper;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * zookeeper单机部署测试
@@ -17,9 +15,15 @@ public class StandaloneTest {
 
     private static final ZooKeeper zk;
 
+    private static final boolean isStandalone = false;
+
     static {
         try {
-            zk = new ZooKeeper("localhost:2181", 30000, new TestWatcher());
+            if (isStandalone) {
+                zk = new ZooKeeper("localhost:2181", 30000, new TestWatcher());
+            } else {
+                zk = new ZooKeeper("localhost:2181,localhost:2182,localhost:2183", 30000, new TestWatcher());
+            }
             System.out.println("zk connect");
         } catch (Throwable e) {
             throw new RuntimeException(e);

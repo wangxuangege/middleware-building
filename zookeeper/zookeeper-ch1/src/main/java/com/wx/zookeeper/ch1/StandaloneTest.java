@@ -1,4 +1,4 @@
-package com.wx.zookeeper.myrpc.ch1;
+package com.wx.zookeeper.ch1;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;

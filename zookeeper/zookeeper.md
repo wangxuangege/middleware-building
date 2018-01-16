@@ -68,24 +68,25 @@ server.3=localhost:2889:3889
 
 <table>
   <tr>
-    <th width=10%, bgcolor=yellow >参数</th>
-    <th width=40%, bgcolor=yellow>详细解释</th>
-    <th width="50%", bgcolor=yellow>备注</th>
+    <th width=20%, bgcolor=yellow >参数</th>
+    <th width=80%, bgcolor=yellow>这个配置项是用来配置 Zookeeper接受客户端（这里所说的客户端不是用户连接 Zookeeper服务器的客户端，而是 Zookeeper 服务器集群中连接到 Leader 的 Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过 10 个心跳的时间（也就是 tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 5*2000=10 秒</th>
   </tr>
   <tr>
-    <td bgcolor=#eeeeee> -l </td>
-    <td> use a long listing format  </td>
+    <td bgcolor=#eeeeee> initLimit </td>
     <td> 以长列表方式显示（显示出文件/文件夹详细信息）  </td>
   </tr>
   <tr>
-    <td bgcolor=#00FF00>-t </td>
-    <td> sort by modification time </td>
-    <td> 按照修改时间排序（默认最近被修改的文件/文件夹排在最前面） </td>
-  <tr>
-    <td bgcolor=rgb(0,10,0)>-r </td>
-    <td> reverse order while sorting </td>
-    <td>  逆序排列 </td>
+    <td bgcolor=#00FF00> syncLimit </td>
+    <td> 这个配置项标识 Leader 与 Follower 之间发送消息，请求和应答时间长度，最长不能超过多少个 tickTime 的时间长度，总的时间长度就是 2*2000=4 秒 </td>
   </tr>
+  <tr>
+    <td bgcolor=rgb(0,10,0)> dataDir </td>
+    <td>  顾名思义就是 Zookeeper 保存数据的目录，默认情况下，Zookeeper 将写数据的日志文件也保存在这个目录里 </td>
+  </tr>
+  <tr>
+      <td bgcolor=rgb(0,10,0)> clientPort </td>
+      <td>  这个端口就是客户端连接 Zookeeper 服务器的端口，Zookeeper 会监听这个端口，接受客户端的访问请求 </td>
+    </tr>
 </table>
 
 - 2.如果直接启动zk节点会报错的，需要创建相应data的目录，创建完了后，分别创建三个myid文件，分别位于每个节点的dataDir下面，填充的值分别为1、2、3。

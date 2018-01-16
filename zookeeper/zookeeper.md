@@ -16,6 +16,7 @@ clientPort=2181
 ~~~ 
 
 - 2.进入bin目录，启动zookeeper：
+
 ~~~sh
 ./zkServer.sh start
 ~~~

@@ -11,18 +11,18 @@ zookeeper
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=D:\workspace\middleware-building\.build\zookeeper\zk1\data
+dataDir=/home/xqhuang/workspace/env/zk/zk1/data
 clientPort=2181
 ~~~ 
 
 - 2.进入bin目录，启动zookeeper：
 ~~~sh
-zkServer.cmd
+./zkServer.sh start
 ~~~
 
 - 3.客户端连接zookeeper：
 ~~~sh
-zkCli.cmd -server 127.0.0.1:2181
+./zkCli.sh -server 127.0.0.1:2181
 ~~~
 
 ## 1.2 复制模式（replicated）
@@ -36,8 +36,7 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2181
-dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk1
-dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk1
+dataDir=/home/xqhuang/workspace/env/zk/zk2/zk1
 server.1=localhost:2887:3887
 server.2=localhost:2888:3888
 server.3=localhost:2889:3889
@@ -45,12 +44,10 @@ server.3=localhost:2889:3889
 
 &nbsp;&nbsp;&nbsp;&nbsp;第二个节点：
 ~~~txt
-tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2182
-dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk2
-dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk2
+dataDir=/home/xqhuang/workspace/env/zk/zk2/data/zk2
 server.1=localhost:2887:3887
 server.2=localhost:2888:3888
 server.3=localhost:2889:3889
@@ -58,37 +55,37 @@ server.3=localhost:2889:3889
 
 &nbsp;&nbsp;&nbsp;&nbsp;第三个节点：
 ~~~txt
-tickTime=2000
 initLimit=10
 syncLimit=5
 clientPort=2183
-dataDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\data\\zk3
-dataLogDir=D:\\workspace\\middleware-building\\.build\\zookeeper\\zk2\\logs\\zk3
+dataDir=/home/xqhuang/workspace/env/zk/zk2/data/zk3
 server.1=localhost:2887:3887
 server.2=localhost:2888:3888
 server.3=localhost:2889:3889
 ~~~ 
 
-- 2.分别进入bin目录，启动三个zookeeper：
+- 2.如果直接启动zk节点会报错的，需要创建相应data的目录，创建完了后，分别创建三个myid文件，分别位于每个节点的dataDir下面，填充的值分别为1、2、3。
+
+- 3.分别进入bin目录，启动三个zookeeper：
 ~~~sh
-zkServer.cmd
+./zkServer.sh
 ~~~
 
-- 3.测试集群同步，分别用三个客户端连接三个节点：
+- 4.测试集群同步，分别用三个客户端连接三个节点：
 
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第一个节点：
 ~~~sh
-zkCli.cmd -server 127.0.0.1:2181
+./zkCli.sh -server 127.0.0.1:2181
 ~~~
 
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第二个节点：
 ~~~sh
-zkCli.cmd -server 127.0.0.1:2182
+./zkCli.sh -server 127.0.0.1:2182
 ~~~
 
 &nbsp;&nbsp;&nbsp;&nbsp;客户端连接第三个节点：
 ~~~sh
-zkCli.cmd -server 127.0.0.1:2183
+./zkCli.sh -server 127.0.0.1:2183
 ~~~
 
 &nbsp;&nbsp;&nbsp;&nbsp;在第一个节点的客户端中添加一个node：
@@ -140,9 +137,9 @@ public class StandaloneTest {
     static {
         try {
             if (isStandalone) {
-                zk = new ZooKeeper("localhost:2181", 30000, new TestWatcher());
+                zk = new ZooKeeper("192.168.171.130:2181", 30000, new TestWatcher());
             } else {
-                zk = new ZooKeeper("localhost:2181,localhost:2182,localhost:2183", 30000, new TestWatcher());
+                zk = new ZooKeeper("192.168.171.130:2181,192.168.171.130:2182,192.168.171.130:2183", 30000, new TestWatcher());
             }
             System.out.println("zk connect");
         } catch (Throwable e) {

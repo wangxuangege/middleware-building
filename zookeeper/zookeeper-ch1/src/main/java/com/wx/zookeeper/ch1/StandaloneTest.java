@@ -23,9 +23,9 @@ public class StandaloneTest {
     static {
         try {
             if (isStandalone) {
-                zk = new ZooKeeper("localhost:2181", 30000, new TestWatcher());
+                zk = new ZooKeeper("192.168.171.130:2181", 30000, new TestWatcher());
             } else {
-                zk = new ZooKeeper("localhost:2181,localhost:2182,localhost:2183", 30000, new TestWatcher());
+                zk = new ZooKeeper("192.168.171.130:2181,192.168.171.130:2182,192.168.171.130:2183", 30000, new TestWatcher());
             }
             System.out.println("zk connect");
         } catch (Throwable e) {

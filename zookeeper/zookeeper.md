@@ -69,11 +69,11 @@ server.3=localhost:2889:3889
 <table>
   <tr>
     <th width=20%, bgcolor=yellow >参数</th>
-    <th width=80%, bgcolor=yellow>这个配置项是用来配置 Zookeeper接受客户端（这里所说的客户端不是用户连接 Zookeeper服务器的客户端，而是 Zookeeper 服务器集群中连接到 Leader 的 Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过 10 个心跳的时间（也就是 tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 5*2000=10 秒</th>
+    <th width=80%, bgcolor=yellow>说明</th>
   </tr>
   <tr>
     <td bgcolor=#eeeeee> initLimit </td>
-    <td> 以长列表方式显示（显示出文件/文件夹详细信息）  </td>
+    <td> 这个配置项是用来配置 Zookeeper接受客户端（这里所说的客户端不是用户连接 Zookeeper服务器的客户端，而是 Zookeeper 服务器集群中连接到 Leader 的 Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过 10 个心跳的时间（也就是 tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 5*2000=10 秒  </td>
   </tr>
   <tr>
     <td bgcolor=#00FF00> syncLimit </td>

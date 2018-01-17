@@ -89,3 +89,52 @@ rocketmq
 - 3. 发布订阅-多种消费场景
 
 ![发布订阅-多种消费场景](static/发布订阅-多种消费场景.jpg)
+
+# 2. rocketmq基本概念
+
+<table>
+  <tr>
+    <th width=40%, bgcolor=yellow >概念</th>
+    <th width=60%, bgcolor=yellow>说明</th>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Producer  </td>
+    <td> 消息生产者，负责产生消息，一般由业务系统负责产生消息 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Consumer  </td>
+    <td> 消息消费者，负责消费消息，一般是后台系统负责异步消费 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Push Consumer  </td>
+    <td> Consumer的一种，应用通常向Consumer对象注册一个Listener接口，一旦收到消息，Consumer对象立刻回调Listener接口方法 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Pull Consumer  </td>
+    <td> Consumer的一种，应用通常主动调用Consumer的拉消息方法从Broker拉消息，主动权由应用控制 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Producer Group  </td>
+    <td> 一类Producer的集合名称，这类Producer通常发送一类消息，且发送逻辑一致 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Consumer Group  </td>
+    <td> 一类Consumer的集合名称，这类Consumer通常消费一类消息，且消费逻辑一致 </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> Broker  </td>
+    <td> 消息中转角色，负责存储消息，转发消息，一般也称为Server </td>
+  </tr>
+   <tr>
+      <td bgcolor=#eeeeee> Name Server  </td>
+      <td> rocketmq名称服务器，更新和发现 broker服务 </td>
+    </tr>
+   <tr>
+      <td bgcolor=#eeeeee> Broker Master  </td>
+      <td> broker 消息主机服务器 </td>
+    </tr>
+   <tr>
+      <td bgcolor=#eeeeee> Broker Slave  </td>
+      <td> broker 消息从机服务器 </td>
+    </tr>
+</table>

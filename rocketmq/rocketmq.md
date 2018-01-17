@@ -138,3 +138,7 @@ rocketmq
       <td> broker 消息从机服务器 </td>
     </tr>
 </table>
+
+# 3. rocketmq部署架构
+
+![部署架构](static/部署架构.png)

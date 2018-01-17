@@ -296,6 +296,8 @@ public class StandaloneTest {
 
 &nbsp;&nbsp;&nbsp;&nbsp;zookeeper可以集中配置应用程序的配置项，将其配置在各个目录节点上面，然后应用程序对这个目录节点进行监听，当配置发生变更时候，应用会接受到zookeeper的通知，然后从zookeeper获取新的配置，并且可以触发一些行为。
 
+![配置管理](static/配置管理.png)
+
 # 4.3 集群管理
 
 &nbsp;&nbsp;&nbsp;&nbsp;集群管理主要在于两个方面：是否有机器退出和加入、选举master。
@@ -303,6 +305,8 @@ public class StandaloneTest {
 - &nbsp;&nbsp;&nbsp;&nbsp;对于第一点，所有机器约定在父目录GroupMembers下创建临时目录节点，然后监听父目录节点的子节点变化消息。一旦有机器挂掉，该机器与zookeeper的连接断开，其所创建的临时目录节点被删除，所有其他机器都收到通知：某个兄弟目录被删除，于是，所有人都知道。新机器加入也是类似，所有机器收到通知：新兄弟目录加入，highcount又有了。
 
 - &nbsp;&nbsp;&nbsp;&nbsp;对于第二点，我们稍微改变一下，所有机器创建临时顺序编号目录节点，每次选取编号最小的机器作为master就好。
+
+![集群管理](static/集群管理.png)
 
 # 4.4 分布式锁
 
@@ -312,6 +316,8 @@ public class StandaloneTest {
 
 - &nbsp;&nbsp;&nbsp;&nbsp;对于第二类，/distribute_lock已经预先存在，所有客户端在它下面创建临时顺序编号目录节点，和选master一样，编号最小的获得锁，用完删除，依次方便。
 
+![分布式锁](static/分布式锁.png)
+
 # 4.5 队列管理
 
 &nbsp;&nbsp;&nbsp;&nbsp;有两种类型的队列：一个是同步队列，当一个队列的成员都聚齐时，这个队列才可用，否则等待所有成员到达；另一个是按照FIFO方式进入队列和出队操作。
@@ -320,6 +326,7 @@ public class StandaloneTest {
 
 - &nbsp;&nbsp;&nbsp;&nbsp;对于第二类，和分布式锁服务中的控制时序场景基本原理一致，入列有编号，出列按编号。
 
+![队列管理](static/队列管理.png)
 
 
 

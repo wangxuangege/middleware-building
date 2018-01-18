@@ -142,3 +142,15 @@ rocketmq
 # 3. rocketmq部署架构
 
 ![部署架构](static/部署架构.png)
+
+- &nbsp;&nbsp;&nbsp;&nbsp; 1. NameServer是一个几乎无状态的节点，可集群部署，节点之间无任何信息同步。
+
+- &nbsp;&nbsp;&nbsp;&nbsp; 2. Broker部署相对复杂，Broker分Master与Slave，一个Master可以对应多个Slaver，但是一个Slaver只能对应一个Master，Master与Slaver的对应关系通过指定相同的BrokerName，不同的BrokerId来定义，BrokerId为0表示Master，非0表示Slaver。Master可以部署多个。每个Broker与NameServer集群中的所有节点建立长连接，定时注册Topic信息到所有的NameServer。
+
+- &nbsp;&nbsp;&nbsp;&nbsp; 3. Producer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master建立长连接，且定时向Master发送心跳。Produce完全无状态，可集群部署。
+
+- &nbsp;&nbsp;&nbsp;&nbsp; 4. Consumer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master、Slaver建立长连接，且定时向Master、Slaver发送心跳。Consumer即可从Master订阅消息，也可以从Slave订阅消息，订阅规则由Broker配置决定。
+
+# 4. rocketmq快速上手
+
+&nbsp;&nbsp;&nbsp;&nbsp;

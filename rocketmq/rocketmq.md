@@ -235,3 +235,7 @@ nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.con
 ~~~
 
 ![rocketmq控制台示例图](static/rocketmq-console示例图.png)
+
+# 5. broker集群搭建
+
+&nbsp;&nbsp;&nbsp;&nbsp;常见的broker集群搭建方式，其中Slave不可写，只可读。

@@ -163,7 +163,7 @@ rocketmq
 
 ## 4.2 rocketmq中间件编译
 
-- &nbsp;1.(rocketmq官方)[http://rocketmq.apache.org/]下载rocketmq源码（我下载的是4.2.0版本）；
+- &nbsp;1.[rocketmq官方](http://rocketmq.apache.org/)下载rocketmq源码（我下载的是4.2.0版本）；
 
 - &nbsp;2. 解压rocketmq-all-4.2.0-source-release.zip文件：
 ~~~sh
@@ -220,7 +220,7 @@ sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
 
 ## 4.5 rocketmq-console运维平台构建
 
-&nbsp;&nbsp;&nbsp;&nbsp;rocketmq提供控制台运维平台，在开源项目rocketmq-externals的子模块rocketmq-console中，使用spring boot开发的，可以从(github地址)[https://github.com/apache/rocketmq-externals]下载。
+&nbsp;&nbsp;&nbsp;&nbsp;rocketmq提供控制台运维平台，在开源项目rocketmq-externals的子模块rocketmq-console中，使用spring boot开发的，可以从[github地址](https://github.com/apache/rocketmq-externals)下载。
 
 - &nbsp;1.命令进入rocketmq-console子目录，通过maven对其编译打包：
 ~~~sh

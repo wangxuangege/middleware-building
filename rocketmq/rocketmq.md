@@ -157,9 +157,9 @@ rocketmq
 
 ## 4.1 前提依赖
 
-- &nbsp;1.linux环境（我使用的是ubuntu-17.04-server-amd64.iso，使用虚拟机vmware，安装了vmware tools、ssh（使用其他console多窗口访问比较方便，建议安装）、net、tar、zip等相关工具）；
+- &nbsp;1. linux环境（我使用的是ubuntu-17.04-server-amd64.iso，使用虚拟机vmware，安装了vmware tools、ssh（使用其他console多窗口访问比较方便，建议安装）、net、tar、zip等相关工具）；
 
-- &nbsp;2.java环境搭建（我安装的是java-1.8.0-openjdk-amd64，安装maven环境Apache Maven 3.3.9）。
+- &nbsp;2. java环境搭建（我安装的是java-1.8.0-openjdk-amd64，安装maven环境Apache Maven 3.3.9）。
 
 ## 4.2 rocketmq中间件编译
 
@@ -189,12 +189,12 @@ cd distribution/target/apache-rocketmq
 
 &nbsp;&nbsp;&nbsp;&nbsp;构建rocketmq完成后，可以测试一下rocketmq是否有问题，分别启动NameServer、启动单个Master。
 
-- &nbsp;1.启动NameServer，日志文件在~/logs/rocketmqlogs/namesrv.log下面，若显示“The Name Server boot success...”表示启动成功：
+- &nbsp;1. 启动NameServer，日志文件在~/logs/rocketmqlogs/namesrv.log下面，若显示“The Name Server boot success...”表示启动成功：
 ~~~sh
 nohup sh bin/mqnamesrv &
 ~~~
 
-- &nbsp;2.启动单个Broker，日志文件在~/logs/rocketmqlogs/broker.log下面，若显示“The broker\[...\] boot success...”表示启动成功：
+- &nbsp;2. 启动单个Broker，日志文件在~/logs/rocketmqlogs/broker.log下面，若显示“The broker\[...\] boot success...”表示启动成功：
 ~~~sh
 nohup sh bin/mqbroker -n localhost:9876 &
 ~~~
@@ -203,17 +203,17 @@ nohup sh bin/mqbroker -n localhost:9876 &
 
 &nbsp;&nbsp;&nbsp;&nbsp;rocketmq编译好的模块里面，有测试发送与接受消息的工具，工具是从环境变量取的NameServer地址。
 
-- &nbsp;1.设置NameServer地址到环境变量中：
+- &nbsp;1. 设置NameServer地址到环境变量中：
 ~~~sh
 export NAMESRV_ADDR=localhost:9876
 ~~~
 
-- &nbsp;2.测试发送消息，若sendStatus=SEND_OK表示发送成功：
+- &nbsp;2. 测试发送消息，若sendStatus=SEND_OK表示发送成功：
 ~~~sh
 sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
 ~~~
 
-- &nbsp;3.测试消费消息：
+- &nbsp;3. 测试消费消息：
 ~~~sh
 sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
 ~~~
@@ -222,14 +222,14 @@ sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
 
 &nbsp;&nbsp;&nbsp;&nbsp;rocketmq提供控制台运维平台，在开源项目rocketmq-externals的子模块rocketmq-console中，使用spring boot开发的，可以从[github地址](https://github.com/apache/rocketmq-externals)下载。
 
-- &nbsp;1.命令进入rocketmq-console子目录，通过maven对其编译打包：
+- &nbsp;1. 命令进入rocketmq-console子目录，通过maven对其编译打包：
 ~~~sh
 mvn package
 ~~~
 
-- &nbsp;2.构建完成后，在目录rocketmq-console/target会生成一个rocketmq-console-ng-1.0.0.jar的包。
+- &nbsp;2. 构建完成后，在目录rocketmq-console/target会生成一个rocketmq-console-ng-1.0.0.jar的包。
 
-- &nbsp;3.启动spring boot编码生成的包rocketmq-console-ng-1.0.0.jar，启动后，运维界面详细件下图所示：
+- &nbsp;3. 启动spring boot编码生成的包rocketmq-console-ng-1.0.0.jar，启动后，运维界面详细件下图所示：
 ~~~sh
 nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.config.namesrvAddr=localhost:9876
 ~~~

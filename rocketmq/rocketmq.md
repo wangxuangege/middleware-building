@@ -239,3 +239,65 @@ nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.con
 # 5. broker集群搭建
 
 &nbsp;&nbsp;&nbsp;&nbsp;常见的broker集群搭建方式，其中Slave不可写，只可读。
+
+## 5.1 单Master
+
+&nbsp;&nbsp;&nbsp;&nbsp;这种方式风险较大，一旦Broker重启或者宕机时，会导致整个服务不可用，不建议线上环境使用。
+
+## 5.2 多Master
+
+&nbsp;&nbsp;&nbsp;&nbsp;一个集群无 Slave，全是 Master，例如 2 个 Master 或者 3 个 Master。
+
+- &nbsp;1. 优点：配置简单，单个Master 宕机或重启维护对应用无影响，在磁盘配置为RAID10 时，即使机器宕机不可恢复情况下，由与 RAID10磁盘非常可靠，消息也不会丢（异步刷盘丢失少量消息，同步刷盘一条不丢），性能最高。
+
+- &nbsp;2. 缺点：单台机器宕机期间，这台机器上未被消费的消息在机器恢复之前不可订阅，消息实时性会受到受到影响。
+
+- &nbsp;3. 部署：
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）先启动 NameServer；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）在机器 A，启动第一个 Master；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）在机器 B，启动第二个 Master。
+
+## 5.3 多 Master 多 Slave 模式，异步复制
+
+&nbsp;&nbsp;&nbsp;&nbsp;每个 Master 配置一个 Slave，有多对Master-Slave，HA采用异步复制方式，主备有短暂消息延迟，毫秒级。
+
+- &nbsp;1. 优点：即使磁盘损坏，消息丢失的非常少，且消息实时性不会受影响，因为Master 宕机后，消费者仍然可以从 Slave消费，此过程对应用透明。不需要人工干预。性能同多 Master 模式几乎一样。
+
+- &nbsp;2. 缺点：Master 宕机，磁盘损坏情况，会丢失少量消息。
+
+- &nbsp;3. 部署：
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）先启动 NameServer；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）在机器 A，启动第一个 Master；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）在机器 B，启动第二个 Master；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4）在机器 C，启动第一个 Slave；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5）在机器 D，启动第二个 Slave。
+
+## 5.3 多 Master 多 Slave 模式，同步双写
+
+&nbsp;&nbsp;&nbsp;&nbsp;每个 Master 配置一个 Slave，有多对Master-Slave，HA采用同步双写方式，主备都写成功，向应用返回成功。
+
+- &nbsp;1. 优点：数据与服务都无单点，Master宕机情况下，消息无延迟，服务可用性与数据可用性都非常高。
+
+- &nbsp;2. 缺点：性能比异步复制模式略低，大约低 10%左右，发送单个消息的 RT会略高。目前主宕机后，备机不能自动切换为主机，后续会支持自动切换功能。
+
+- &nbsp;3. 部署：
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）先启动 NameServer；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）在机器 A，启动第一个 Master；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）在机器 B，启动第二个 Master；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4）在机器 C，启动第一个 Slave；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5）在机器 D，启动第二个 Slave。
+
+&nbsp;&nbsp;&nbsp;&nbsp;以上 Broker 与 Slave 配对是通过指定相同的brokerName 参数来配对，Master的 BrokerId 必须是 0，Slave 的BrokerId 必须是大与 0 的数。另外一个 Master下面可以挂载多个 Slave，同一 Master 下的多个 Slave通过指定不同的 BrokerId来区分。

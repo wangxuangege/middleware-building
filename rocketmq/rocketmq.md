@@ -301,3 +301,189 @@ nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.con
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5）在机器 D，启动第二个 Slave。
 
 &nbsp;&nbsp;&nbsp;&nbsp;以上 Broker 与 Slave 配对是通过指定相同的brokerName 参数来配对，Master的 BrokerId 必须是 0，Slave 的BrokerId 必须是大与 0 的数。另外一个 Master下面可以挂载多个 Slave，同一 Master 下的多个 Slave通过指定不同的 BrokerId来区分。
+
+# 6. 多Master多Slave模式搭建（异步双写）
+
+## 6.1 搭建集群的目标
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+## 6.2 搭建步骤
+
+- &nbsp;1. 编写部署启动脚本start.sh，包括：
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）先启动 NameServer；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）启动Master Broker A；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）启动Master Broker B；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4）启动Slave Broker A；
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5）启动Slave Broker B。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;启动脚本如下：
+
+~~~sh
+#!/bin/sh
+
+export ROCKETMQ_HOME="/home/xqhuang/workspace/env/rocketmq/apache-rocketmq"
+export ROCKETMQ_HOME_BIN="${ROCKETMQ_HOME}/bin"
+export ROCKETMQ_DEPLOY="${ROCKETMQ_HOME}/deploy"
+
+echo "启动namesrver"
+nohup sh ${ROCKETMQ_HOME_BIN}/mqnamesrv &
+
+echo "等待10s"
+sleep 10
+
+echo "启动master A"
+nohup sh ${ROCKETMQ_HOME_BIN}/mqbroker -n localhost:9876 -c "${ROCKETMQ_DEPLOY}/conf/broker-a.properties" &
+
+echo "等待5s"
+sleep 5
+
+echo "启动master B"
+nohup sh ${ROCKETMQ_HOME_BIN}/mqbroker -n localhost:9876 -c "${ROCKETMQ_DEPLOY}/conf/broker-b.properties" &
+
+echo "等待5s"
+sleep 5
+
+echo "启动slave A"
+nohup sh ${ROCKETMQ_HOME_BIN}/mqbroker -n localhost:9876 -c "${ROCKETMQ_DEPLOY}/conf/broker-a-s.properties" &
+
+echo "等待5s"
+sleep 5
+
+echo "启动slave B"
+nohup sh ${ROCKETMQ_HOME_BIN}/mqbroker -n localhost:9876 -c "${ROCKETMQ_DEPLOY}/conf/broker-b-s.properties" &
+~~~
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Master Broker A配置文件broker-a.properties：
+
+~~~txt
+brokerClusterName=MyBrokerCluster
+brokerName=broker-a
+brokerId=0
+namesrvAddr=localhost:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=false
+autoCreateSubscriptionGroup=false
+listenPort=10911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/home/xqhuang/data/rocketmq/storeMA
+storePathCommitLog=/home/xqhuang/data/rocketmq/storeMA/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+~~~
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Master Broker B配置文件broker-b.properties：
+
+~~~txt
+brokerClusterName=MyBrokerCluster
+brokerName=broker-b
+brokerId=0
+namesrvAddr=localhost:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=false
+autoCreateSubscriptionGroup=false
+listenPort=11911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/home/xqhuang/data/rocketmq/storeMB
+storePathCommitLog=/home/xqhuang/data/rocketmq/storeMB/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+~~~
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Slave Broker A配置文件broker-a-slave.properties：
+
+~~~txt
+brokerClusterName=MyBrokerCluster
+brokerName=broker-a
+brokerId=1
+namesrvAddr=localhost:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=false
+autoCreateSubscriptionGroup=false
+listenPort=12911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/home/xqhuang/data/rocketmq/storeSA
+storePathCommitLog=/home/xqhuang/data/rocketmq/storeSA/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+~~~
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Slave Broker B配置文件broker-b-slave.properties：
+
+~~~txt
+brokerClusterName=MyBrokerCluster
+brokerName=broker-b
+brokerId=1
+namesrvAddr=localhost:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=false
+autoCreateSubscriptionGroup=false
+listenPort=13911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/home/xqhuang/data/rocketmq/storeSB
+storePathCommitLog=/home/xqhuang/data/rocketmq/storeSB/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+~~~
+

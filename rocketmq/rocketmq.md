@@ -231,7 +231,7 @@ mvn package
 
 - &nbsp;3. 启动spring boot编码生成的包rocketmq-console-ng-1.0.0.jar，启动后，运维界面详细件下图所示：
 ~~~sh
-nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.config.namesrvAddr=localhost:9876
+nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=8080 --rocketmq.config.namesrvAddr=localhost:9876 &
 ~~~
 
 ![rocketmq控制台示例图](static/rocketmq-console示例图.png)
@@ -486,4 +486,12 @@ checkTransactionMessageEnable=false
 sendMessageThreadPoolNums=128
 pullMessageThreadPoolNums=128
 ~~~
+
+## 6.2 启动rocketmq监控运维平台：
+
+~~~sh
+nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.config.namesrvAddr=localhost:9876 &
+~~~
+
+![监控运维查看集群](static/监控运维查看集群.png)
 

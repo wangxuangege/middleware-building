@@ -27,7 +27,7 @@ tar -xvf openfire_4_1_2.tar.gz
 
 &nbsp;&nbsp;&nbsp;&nbsp;第一次启动openfire，需要配置openfire数据源，本人采用的是mysql数据库。
 
-# 2.1 mysql安装
+# 2.2 mysql安装
 
 &nbsp;&nbsp;&nbsp;&nbsp;本人新建了一个ubantu的虚拟机，下载的版本是mysql-5.7.21-1.sles11.x86_64.rpm-bundle.tar。
 
@@ -95,11 +95,11 @@ sudo /etc/init.d/mysql start
  sudo /etc/init.d/mysql restart
  ~~~
  
-# 2.1 初始化openfire
+# 2.3 初始化openfire
  
- &nbsp;&nbsp;&nbsp;&nbsp;openfire解压包下面/resources/database下面有场景数据库表的创建脚本，选择mysql数据库安装脚本openfire_mysql.sql。
+&nbsp;&nbsp;&nbsp;&nbsp;openfire解压包下面/resources/database下面有场景数据库表的创建脚本，选择mysql数据库安装脚本openfire_mysql.sql。
 
- &nbsp;&nbsp;&nbsp;&nbsp;连接mysql客户端：
+&nbsp;&nbsp;&nbsp;&nbsp;连接mysql客户端：
  ~~~sh
 mysql -uroot –proot
  ~~~
@@ -114,3 +114,19 @@ mysql -uroot –proot
  &nbsp;&nbsp;&nbsp;&nbsp;openfire选择初始化数据库jdbc:mysql://192.168.171.131:3306/openfire?rewriteBatchedStatements=true，用户名密码分别是root/root，下一步配置openfire管理员密码openfire，即完成openfire初始化过程，重新登陆即可管理员登陆页面。
  ![openfire管理页面](static/openfire管理页面.png)
  
+  
+# 2.4 安装XMPP客户端Spark
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;下载Spark Window10版本，安装后，点击高级配置详细启动参数。
+
+&nbsp;&nbsp;&nbsp;&nbsp;标签“一般”配置如下，默认的客户端到服务器端口为5222，可以根据情况在openfire管理页面重新设置，：
+![一般](static/一般.png)
+
+&nbsp;&nbsp;&nbsp;&nbsp;标签“PKI”配置如下，其中证书是从openfire安装包（/home/xqhuang/workspace/env/openfire/openfire/resources/security）下面copy出来的：
+![PKI](static/PKI.png)
+
+&nbsp;&nbsp;&nbsp;&nbsp;登陆页面如下：
+![登陆](static/登陆.png)
+
+&nbsp;&nbsp;&nbsp;&nbsp;登陆成功后，界面类似于一般的聊天应用，添加好友（可以直接在openfire管理平台添加用户，可以通过Spart注册新用户）后就可以进行聊天了。
+![通讯录页面](static/通讯录页面.png)

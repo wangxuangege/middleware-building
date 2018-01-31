@@ -129,6 +129,7 @@ mysql -uroot –proot
 ![PKI](static/PKI.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;登陆页面如下：
+
 ![登陆](static/登陆.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;登陆成功后，界面类似于一般的聊天应用，添加好友（可以直接在openfire管理平台添加用户，可以通过Spart注册新用户）后就可以进行聊天了。

@@ -135,3 +135,173 @@ mysql -uroot –proot
 &nbsp;&nbsp;&nbsp;&nbsp;登陆成功后，界面类似于一般的聊天应用，添加好友（可以直接在openfire管理平台添加用户，可以通过Spart注册新用户）后就可以进行聊天了。
 
 ![通讯录页面](static/通讯录页面.png)
+
+# 3. JAVA利用smack使用openfire
+
+&nbsp;&nbsp;&nbsp;&nbsp;smack是一个基于XMPP协议的Java实现，提供一套可扩展的API，与openfire进行通信。smack库易于使用，仅仅几行代码就能实现客户端连接，登陆，发送即时消息。但是由于使用XMPP协议，所以不适合用在高并发的场合。
+
+![smack与openfire的关系](static/smack与openfire的关系.png)
+
+# 3.1 maven依赖
+
+&nbsp;&nbsp;&nbsp;&nbsp;pom依赖如下,version根据你的实际情况选择：
+~~~xml
+ <dependency>
+    <groupId>org.igniterealtime.smack</groupId>
+    <artifactId>smack-java7</artifactId>
+    <version>${smack.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.igniterealtime.smack</groupId>
+    <artifactId>smack-core</artifactId>
+    <version>${smack.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.igniterealtime.smack</groupId>
+    <artifactId>smack-tcp</artifactId>
+    <version>${smack.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.igniterealtime.smack</groupId>
+    <artifactId>smack-extensions</artifactId>
+    <version>${smack.version}</version>
+</dependency>
+~~~
+
+# 3.2 smack客户端发消息简单demo
+
+~~~java
+package com.wx.openfire.ch1;
+
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.sm.predicates.ForEveryStanza;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
+
+import java.io.IOException;
+
+/**
+ * @author xinquan.huangxq
+ */
+public class Client {
+
+    private String userName;
+
+    private String userPwd;
+
+    private String resource;
+
+    private String serviceName;
+
+    private String host;
+
+    private int port;
+
+    private AbstractXMPPConnection connection;
+
+    public Client(String host, int port, String serviceName, String resource, String userName, String userPwd) {
+        this.host = host;
+        this.port = port;
+        this.serviceName = serviceName;
+        this.resource = resource;
+        this.userName = userName;
+        this.userPwd = userPwd;
+    }
+
+    /**
+     * 发送一条信息
+     *
+     * @param userName
+     * @param content
+     * @return
+     */
+    public boolean sendMsg(String userName, String content) {
+        if (this.connection == null) {
+            return false;
+        }
+        Message message = new Message(userName + "@" + serviceName, content);
+        String deliveryReceiptId = DeliveryReceiptRequest.addTo(message);
+        try {
+            connection.sendStanza(message);
+            System.out.println("sendMessage: deliveryReceiptId for this message is: "+ deliveryReceiptId);
+            return true;
+        } catch (SmackException.NotConnectedException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 初始化
+     */
+    public void init() throws IOException, XMPPException, SmackException {
+        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+        configBuilder.setUsernameAndPassword(userName, userPwd);
+        configBuilder.setResource(resource);
+        configBuilder.setServiceName(serviceName);
+        configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+        configBuilder.setHost(host);
+        configBuilder.setPort(port);
+        configBuilder.setSendPresence(true);
+        XMPPTCPConnectionConfiguration config = configBuilder.build();
+
+        AbstractXMPPConnection connection = new XMPPTCPConnection(config);
+        connection.addConnectionListener(new ConnectionListener() {
+            @Override
+            public void connected(XMPPConnection connection) {
+                System.out.println("Openfire: connected");
+            }
+
+            @Override
+            public void authenticated(XMPPConnection connection, boolean resumed) {
+                System.out.println("Openfire: authenticated");
+            }
+
+            @Override
+            public void connectionClosed() {
+                System.out.println("Openfire: connectionClosed");
+            }
+
+            @Override
+            public void connectionClosedOnError(Exception e) {
+                System.out.println("Openfire: connectionClosedOnError");
+            }
+
+            @Override
+            public void reconnectionSuccessful() {
+                System.out.println("Openfire: reconnectionSuccessful");
+            }
+
+            @Override
+            public void reconnectingIn(int seconds) {
+                System.out.println("Openfire: reconnectingIn");
+            }
+
+            @Override
+            public void reconnectionFailed(Exception e) {
+                System.out.println("Openfire: reconnectionFailed");
+            }
+        });
+        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(connection);
+        reconnectionManager.enableAutomaticReconnection();
+
+        connection.connect();
+        connection.login();
+
+        connection.addAsyncStanzaListener(new StanzaListener() {
+            @Override
+            public void processPacket(Stanza stanza) throws SmackException.NotConnectedException {
+                System.out.println("Received Openfire message: " + stanza);
+            }
+        }, ForEveryStanza.INSTANCE);
+
+        PingManager.getInstanceFor(connection).setPingInterval(30);
+
+        // 记录connection
+        this.connection = connection;
+    }
+}
+~~~

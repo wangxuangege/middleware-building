@@ -116,3 +116,32 @@ cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=wait
 ~~~
 
 #### 1.2.2 常用命令
+
+<table>
+  <tr>
+    <th width=40%, bgcolor=yellow >命令</th>
+    <th width=60%, bgcolor=yellow>操作</th>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 显示数据库 </td>
+    <td>
+    ~~~sh
+    > show databases;
+    name: databases
+    name
+    ----
+    _internal
+    collectd
+    test
+    ~~~
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 新建数据库 </td>
+    <td> 
+     ~~~sh
+     
+     ~~~
+     </td>
+  </tr>
+</table>

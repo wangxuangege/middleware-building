@@ -124,24 +124,46 @@ cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=wait
   </tr>
   <tr>
     <td bgcolor=#eeeeee> 显示数据库 </td>
-    <td>
-    ~~~sh
-    > show databases;
-    name: databases
-    name
-    ----
-    _internal
-    collectd
-    test
-    ~~~
-    </td>
+    <td>show databases</td>
   </tr>
   <tr>
     <td bgcolor=#eeeeee> 新建数据库 </td>
-    <td> 
-     ~~~sh
-     
-     ~~~
-     </td>
+    <td>create database tmp</td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 删除数据库 </td>
+    <td>drop database tmp</td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 使用某个数据库 </td>
+    <td> use database collectd </td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 显示所有表  </td>
+    <td> show measurements </td>
+  </tr>
+ <tr>
+   <td bgcolor=#eeeeee> 新建表 </td>
+   <td>没有显示新建表的命令，通过插入记录新建表</td>
+ </tr>
+ <tr>
+    <td bgcolor=#eeeeee> 插入记录 </td>
+    <td>insert disk_free,hostname=localhost value=442221834240i 1435362189575692182</td>
+ </tr>
+ <tr>
+    <td bgcolor=#eeeeee> 查询记录 </td>
+    <td>select * from disk_free</td>
+ </tr>
+ <tr>
+    <td bgcolor=#eeeeee> 删除记录/更新记录 </td>
+    <td>不支持</td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 删除表 </td>
+    <td>drop measurement disk_fres</td>
+  </tr>
+  <tr>
+    <td bgcolor=#eeeeee> 显示series</td>
+    <td>show series from cpu_value</td>
   </tr>
 </table>

@@ -271,4 +271,4 @@ tar -xvf grafana-4.6.3.linux-x64.tar.gz
 ~~~sh
 nohup ./grafana-server &
 ~~~
-![grafana home页面](static/grafana home页面.png)
+![grafana home页面](static/grafana%20home页面.png)

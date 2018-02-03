@@ -272,3 +272,21 @@ tar -xvf grafana-4.6.3.linux-x64.tar.gz
 nohup ./grafana-server &
 ~~~
 ![grafana home页面](static/grafana%20home页面.png)
+
+## 3.1 数据采集
+
+&nbsp;&nbsp;&nbsp;&nbsp;grafana采集展示的是influxdb的collectd和我编码一直插入的数据（代码比较多，详细见grafana-ch1），使用前需要先配置数据源啥的，页面操作具体自己玩，有啥不懂的可以网上找找，这类比较多。
+
+- &nbsp;1. 采集collectd数据示例
+
+&nbsp;&nbsp;&nbsp;&nbsp;下图展示可能比较奇怪，我稍微解释一下啊，因为虚拟机和我本机时钟不匹配导致的，仅作为暂时，不做过多说明，故意把展示区间设置在虚拟机时间左右，暂时的图如下：
+![collectd图表展示](static/collectd图表展示图.png)
+
+- &nbsp;2. 自己写测试例子，主动向influxdb插入数据
+
+&nbsp;&nbsp;&nbsp;&nbsp;下图展示也比较奇怪，原因也是因为时钟不一致导致的，故意把区间调到可以展示的区间范围内。
+![主动插入influxdb监控数据监控图表](static/主动插入influxdb监控数据监控图表.png)
+
+
+
+

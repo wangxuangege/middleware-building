@@ -40,6 +40,8 @@ sudo nohup ./influxd &
 
 &nbsp;&nbsp;&nbsp;&nbsp;influxdb时序数据库有一套功能强大的类sql语法，但是操作好该语法，需要了解influxdb时序数据库的一些概念。
 
+#### 1.2.1 常用概念
+
 &nbsp;&nbsp;&nbsp;&nbsp;influxdb时序数据库有部分概念与传统数据库概念相似：
 <table>
   <tr>
@@ -112,3 +114,5 @@ cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=system
 cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=user
 cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=wait
 ~~~
+
+#### 1.2.2 常用命令

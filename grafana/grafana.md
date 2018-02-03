@@ -40,7 +40,7 @@ sudo nohup ./influxd &
 
 &nbsp;&nbsp;&nbsp;&nbsp;influxdb时序数据库有一套功能强大的类sql语法，但是操作好该语法，需要了解influxdb时序数据库的一些概念。
 
-&nbsp:&nbsp;&nbsp;&nbsp;influxdb时序数据库有部分概念与传统数据库概念相似：
+&nbsp;&nbsp;&nbsp;&nbsp;influxdb时序数据库有部分概念与传统数据库概念相似：
 <table>
   <tr>
     <th width=40%, bgcolor=yellow >influxdb概念</th>
@@ -60,9 +60,9 @@ sudo nohup ./influxd &
   </tr>
 </table>
 
-&nbsp:&nbsp;&nbsp;&nbsp;influxdb独有的一些概念：point和series。
+&nbsp;&nbsp;&nbsp;&nbsp;influxdb独有的一些概念：point和series。
 
-&nbsp:&nbsp;&nbsp;&nbsp;point由时间戳（time）、数据（field）、标签（tags）组成，point相当于传统传统数据库里的一行数据，如下表所示：
+&nbsp;&nbsp;&nbsp;&nbsp;point由时间戳（time）、数据（field）、标签（tags）组成，point相当于传统传统数据库里的一行数据，如下表所示：
 <table>
   <tr>
     <th width=40%, bgcolor=yellow >point属性</th>
@@ -82,7 +82,7 @@ sudo nohup ./influxd &
   </tr>
 </table>
 
-&nbsp:&nbsp;&nbsp;&nbsp;series表示某张表里面的数据，可以在图表上面画出几条线：通过tag排列组合算出来的。下图为collectd统计cpu_value的series，如下所示：
+&nbsp;&nbsp;&nbsp;&nbsp;series表示某张表里面的数据，可以在图表上面画出几条线：通过tag排列组合算出来的。下图为collectd统计cpu_value的series，如下所示：
 ~~~sh
 xqhuang@linux-koj9:~/workspace/env/influxdb/influxdb-1.4.2-1/usr/bin> ./influx
 Connected to http://localhost:8086 version 1.4.2

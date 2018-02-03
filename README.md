@@ -5,3 +5,4 @@ middleware building
 3. [openfire](openfire/openfire.md)实时协作RTC服务器
 4. [hazelcast](hazelcast/hazelcast.md)分布式数据网格中间件
 5. [grafana](grafana/grafana.md)监控组件
+6. [dubbo](dubbo/dubbo.md)分布式服务框架

@@ -167,3 +167,108 @@ cpu_value,host=linux-koj9.suse,instance=0,type=cpu,type_instance=wait
     <td>show series from cpu_value</td>
   </tr>
 </table>
+
+# 2. collectd
+
+&nbsp;&nbsp;&nbsp;&nbsp;本人下载的是collectd-5.8.0.tar.bz2，通过编译安装完成。
+
+## 2.1 安装
+
+- &nbsp;1. 解压
+~~~sh
+tar -xvf collectd-5.8.0.tar.bz2
+~~~
+
+- &nbsp;2. 进入collectd-5.8.0目录，执行编译安装，注意安装时候选择管理员权限操作，否则会导致安装失败。
+~~~sh
+./configure
+sudo make all install 
+~~~
+
+- &nbsp;3. 编译安装后，collectd安装在目录/opt/collectd目录下，配置文件在etc/collectd.conf，配置文件较为复杂，建议先备份配置文件，colelctd启动脚本文件sbin/collectd。
+
+- &nbsp;4. 配置collectd.conf文件，让收集的采集信息发到influxdb接受，其中192.168.171.131为influxdb部署的机器ip，25826为其监听的端口。
+~~~txt
+<Plugin network>
+        <Server "192.168.171.131" "25826">
+        </Server>
+......
+</Plugin>
+~~~
+
+- &nbsp;5. influxdb开启collectd收集插件，修改配置/etc/influxdb/influxdb.conf，然后关闭influxdb，然后重新启动influxdb，其中需要注意一下typesdb文件，因为我的influxdb和collectd在同一台机器上面，我直接使用的ollectd的目录下面该文件，若部署在不同机器上面，需要将collectd目录下的该文件拷贝到influxdb机器上面，把该配置指向该文件。
+~~~txt
+[[collectd]]
+  enabled = true
+  bind-address = ":25826"
+  database = "collectd"
+  # retention-policy = ""
+  #
+  # The collectd service supports either scanning a directory for multiple types
+  # db files, or specifying a single db file.
+  typesdb = "/opt/collectd/share/collectd"
+  #
+  # security-level = "none"
+  # auth-file = "/etc/collectd/auth_file"
+
+  # These next lines control how batching works. You should have this enabled
+  # otherwise you could get dropped metrics or poor performance. Batching
+  # will buffer points in memory if you have many coming in.
+
+  # Flush if this many points get buffered
+  batch-size = 5000
+
+  # Number of batches that may be pending in memory
+  batch-pending = 10
+
+  # Flush at least this often even if we haven't hit buffer limit
+  batch-timeout = "10s"
+~~~
+&nbsp;&nbsp;&nbsp;&nbsp;重启后，检查一下influxdb的collectd插件是否打开，可以看起监听端口是否存在，存在则表示数据已经开始收集。
+~~~sh
+xqhuang@linux-koj9:/etc/influxdb> sudo netstat -apn | grep influ
+root's password:
+tcp        0      0 127.0.0.1:8088          0.0.0.0:*               LISTEN      4908/influxd        
+tcp        0      0 :::8086                 :::*                    LISTEN      4908/influxd        
+tcp        0      0 ::1:38011               ::1:8086                ESTABLISHED 4915/influx         
+tcp        0      0 ::1:8086                ::1:38011               ESTABLISHED 4908/influxd        
+udp        0      0 :::25826                :::*                                4908/influxd 
+~~~
+&nbsp;&nbsp;&nbsp;&nbsp;另外，还可以用influx打开客户端，看一下数据库源collectd下面有没有各项统计表。
+~~~sh
+xqhuang@linux-koj9:~/workspace/env/influxdb/influxdb-1.4.2-1/usr/bin> ./influx
+Connected to http://localhost:8086 version 1.4.2
+InfluxDB shell version: 1.4.2
+> use collectd;
+Using database collectd
+> show measurements;
+name: measurements
+name
+----
+cpu_value
+interface_rx
+interface_tx
+load_longterm
+load_midterm
+load_shortterm
+memory_value
+~~~
+
+# 3. grafana
+
+&nbsp;&nbsp;&nbsp;&nbsp;本人下载的是grafana-4.6.3.linux-x64.tar.gz版本。
+
+## 3.1 安装
+
+- &nbsp;1. 解压
+~~~sh
+tar -xvf grafana-4.6.3.linux-x64.tar.gz
+~~~
+
+- &nbsp;2. 解压后，配置文件在conf/defaults.ini下面，需要注意，影响启动的配置是database，数据源指的是grafana本身用的数据库，主要包括账号管理，配置的图表等信息，我使用的是默认的文件数据库sqlite3，你可以根据情况选择你的数据库。
+
+- &nbsp;3. 启动grafana，启动脚本在bin/grafana-server，启动默认端口为3000，管理员密码再defaults.ini中已经配置，下图为grafana home页面，其中test和collectd是我建好的两个监控面板。
+~~~sh
+nohup ./grafana-server &
+~~~
+![grafana home页面](static/grafana home页面.png)

@@ -94,7 +94,7 @@ server.3=localhost:2889:3889
 
 - 3.分别进入bin目录，启动三个zookeeper：
 ~~~sh
-./zkServer.sh
+./zkServer.sh start
 ~~~
 
 - 4.测试集群同步，分别用三个客户端连接三个节点：
@@ -192,7 +192,7 @@ ls /
 
 ## 2.3 java使用用例
 
-&nbsp;&nbsp;&nbsp;&nbsp;使用zookeeper的java方式，使用代码描述，不详细说明。
+&nbsp;&nbsp;&nbsp;&nbsp;使用zookeeper的java方式，使用代码描述，不详细说明。（有关这部分，发现在虚拟机中跑的时候报ConnectionLossException，查了很多方法，包括加代码或者关防火墙都没用，最后尝试在windows上启动zookeeper，在windows上运行代码才跑起来）
 ~~~java
 package com.wx.zookeeper;
 
